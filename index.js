@@ -49,12 +49,17 @@ fetch('https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checklists?key=89
                 let paraCB = document.createElement("INPUT");
                 paraCB.setAttribute("type", "checkbox");
                 paraCB.style.cssText = "height:16px; width:16px";
-
+                var x;
                 if (cardData[i]["checkItems"][j]["state"] === "complete") {
                     paraCB.checked = true;
+                    x = true;
                 } else {
                     paraCB.checked = false;
+                    x = false;
                 }
+                var fn = "checkboxFunction("+x+", \"" + cardData[i]["checkItems"][j]["id"] + "\")";
+                paraCB.setAttribute("onclick", fn);
+
 
                 childDivForCB.appendChild(paraCB);
                 let childDivForPara = document.createElement('div');
@@ -71,6 +76,53 @@ fetch('https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checklists?key=89
     .catch(err => {
         console.log(err);
     })
+
+
+
+function checkboxFunction(paraCB, id) {
+    console.log(id)
+    if (paraCB.checked = true) {
+
+        var data = null;
+
+        var xhr = new XMLHttpRequest();
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === this.DONE) {
+                console.log(this.responseText);
+            }
+        });
+
+        var urlAPIPut = "https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checkItem/"+id+"?state=complete&key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7"
+
+        xhr.open("PUT", urlAPIPut);
+
+        xhr.send(data);
+        
+
+    }
+
+    else {
+        var data = null;
+
+        var xhr = new XMLHttpRequest();
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === this.DONE) {
+                console.log(this.responseText);
+            }
+        });
+
+        var urlAPIPut = "https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checkItem/"+id+"?state=incomplete&key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7"
+
+        xhr.open("PUT", urlAPIPut);
+
+        xhr.send(data);
+    
+    }
+
+   
+}
 
 function buttonFunction() {
     let inputVar = document.querySelector('.mainInput').value;
@@ -93,4 +145,3 @@ function buttonFunction() {
 
     location.reload();
 }
-
