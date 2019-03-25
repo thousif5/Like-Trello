@@ -4,8 +4,8 @@
 $(document).ready(function () {
     $("body").css("background-color", "#FFA02E").css("font-family", "'Open Sans', sans-serif");
     $(".main-div").css("height", "58em").css("display", "flex").css("justify-content", "center").css("align-items", "center");
-    $(".content-div").css("height", "700px").css("width", "700px").css("background", "#E4AF70").css("padding-left", "30px").css("padding-right", "30px");
-    $(".content-div h2").css("padding", "40").css("color", "#BD0000").css("text-align", "center");
+    $(".content-div").css("height", "100%").css("width", "700px").css("background", "#E4AF70").css("padding-left", "30px").css("padding-right", "30px");
+    $(".content-div h2").css("padding", "40").css("color", "floralwhite").css("text-align", "center");
     $(".content-div button").css("background", "black").css("color", "white");
 
 
@@ -28,7 +28,7 @@ fetch('https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checklists?key=89
     .then(response => {
         return response.json();
     }).then(cardData => {
-
+        var forI = 0;
 
         //console.log(data);
         for (let i = 0; i < cardData.length; i++) {
@@ -52,12 +52,23 @@ fetch('https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checklists?key=89
             buttonForItem.setAttribute("class", "buttonItem");
             buttonForItem.textContent = "Add Items";
 
-            var func = "functionForItems(\""+cardData[i]['id']+"\")";
+
+            let deleteButton = document.createElement("button");
+            deleteButton.setAttribute("Class", "delButton");
+            deleteButton.setAttribute("onclick", "deleteChecklist(\"" + cardData[i]['id'] + "\")");
+
+            deleteButton.textContent = "Delete Checklist";
+
+
+
+
+            var func = "functionForItems(" + forI + ", \"" + cardData[i]['id'] + "\")";
             buttonForItem.setAttribute("onclick", func);
 
             newDivForFlex.appendChild(newInput);
 
             newDivForFlex.appendChild(buttonForItem);
+            newDivForFlex.appendChild(deleteButton);
 
             newDiv.appendChild(newDivForFlex);
 
@@ -67,7 +78,7 @@ fetch('https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checklists?key=89
 
             document.querySelector(".content-div").appendChild(newDiv);
 
-
+        // for checkitems
             for (let j = 0; j < cardData[i]["checkItems"].length; j++) {
 
                 let creDiv = document.createElement('div');
@@ -91,14 +102,31 @@ fetch('https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checklists?key=89
                 var fn = "checkboxFunction(" + x + ", \"" + cardData[i]["checkItems"][j]["id"] + "\")";
                 paraCB.setAttribute("onclick", fn);
 
+                let deleteDiv = document.createElement("div");
+                deleteDiv.setAttribute("class", "divDelete");
+
+
+                deleteDiv.setAttribute("onclick", "deleteItemsFunction(\"" + cardData[i]['id'] + "\",\"" + cardData[i]['checkItems'][j]['id'] + "\")");
+                deleteDiv.style.cssText = "padding-left:10px";
+
+                let deleteForItems = document.createElement("button");
+                deleteForItems.setAttribute("class", "delButtonForItems");
+                deleteForItems.textContent = "Delete Item";
+
+                deleteDiv.appendChild(deleteForItems);
+
+
+
 
                 childDivForCB.appendChild(paraCB);
                 let childDivForPara = document.createElement('div');
                 creDiv.appendChild(childDivForPara);
+                creDiv.appendChild(deleteDiv);
                 let elePara = document.createElement('p');
                 elePara.textContent = cardData[i]["checkItems"][j]["name"];
                 childDivForPara.appendChild(elePara);
             }
+            forI++;
         }
 
 
@@ -111,47 +139,34 @@ fetch('https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checklists?key=89
 
 
 function checkboxFunction(paraCB, id) {
-    console.log(id)
-    if (paraCB.checked = true) {
-
-        var data = null;
-
-        var xhr = new XMLHttpRequest();
-
-        xhr.addEventListener("readystatechange", function () {
-            if (this.readyState === this.DONE) {
-                console.log(this.responseText);
-            }
-        });
-
-        var urlAPIPut = "https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checkItem/" + id + "?state=incomplete&key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7"
-
-        xhr.open("PUT", urlAPIPut);
-
-        xhr.send(data);
+   // console.log(id)
 
 
+    var data = null;
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === this.DONE) {
+            console.log(this.responseText);
+        }
+    });
+
+    if (paraCB == true) {
+
+        var urlAPIPut = "https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checkItem/" + id + "?state=incomplete&key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7";
     } else {
-        var data = null;
-
-        var xhr = new XMLHttpRequest();
-
-        xhr.addEventListener("readystatechange", function () {
-            if (this.readyState === this.DONE) {
-                console.log(this.responseText);
-            }
-        });
-
-        var urlAPIPut = "https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checkItem/" + id + "?state=complete&key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7"
-
-        xhr.open("PUT", urlAPIPut);
-
-        xhr.send(data);
+        var urlAPIPut = "https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checkItem/" + id + "?state=complete&key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7";
 
     }
 
+    xhr.open("PUT", urlAPIPut);
 
+    xhr.send(data);
+    // location.reload();
 }
+
+
 
 function buttonFunction() {
     let inputVar = document.querySelector('.mainInput').value;
@@ -175,9 +190,10 @@ function buttonFunction() {
     location.reload();
 }
 
-function functionForItems(id) {
-    let itemInput = document.querySelector(".inputForItems").value;
-    console.log(itemInput);
+function functionForItems(i, id) {
+   // console.log(id);
+    let itemInput = document.querySelectorAll(".inputForItems")[i].value;
+    //console.log(itemInput);
     var data = null;
 
     var xhr = new XMLHttpRequest();
@@ -188,9 +204,51 @@ function functionForItems(id) {
         }
     });
 
-    var urlAPIForItems = "https://api.trello.com/1/checklists/"+id+"/checkItems?name="+itemInput+"&pos=bottom&checked=false&key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7";
+    var urlAPIForItems = "https://api.trello.com/1/checklists/" + id + "/checkItems?name=" + itemInput + "&pos=bottom&checked=false&key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7";
 
     xhr.open("POST", urlAPIForItems);
 
     xhr.send(data);
+    location.reload();
+}
+
+function deleteChecklist(id) {
+    var data = null;
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === this.DONE) {
+            console.log(this.responseText);
+        }
+    });
+
+    let deleteUrl = "https://api.trello.com/1/checklists/" + id + "?key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7";
+
+    xhr.open("DELETE", deleteUrl);
+
+    xhr.send(data);
+    //location.reload();
+
+}
+
+function deleteItemsFunction(checklistId, checkItemId) {
+
+   // console.log(checkItemId, checklistId);
+    var data = null;
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === this.DONE) {
+            console.log(this.responseText);
+        }
+    });
+
+    let deleteItemsUrl = "https://api.trello.com/1/checklists/" + checklistId + "/checkItems/" + checkItemId + "?key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7";
+
+    xhr.open("DELETE", deleteItemsUrl);
+
+    xhr.send(data);
+    //location.reload();
 }
