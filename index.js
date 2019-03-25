@@ -32,10 +32,41 @@ fetch('https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checklists?key=89
 
         //console.log(data);
         for (let i = 0; i < cardData.length; i++) {
+            let newDiv = document.createElement("div");
+            newDiv.setAttribute("class", "newDivFor");
 
             let newPara = document.createElement("h3");
             newPara.innerHTML = cardData[i]['name'];
-            document.querySelector(".content-div").appendChild(newPara);
+
+            newDiv.appendChild(newPara);
+
+            let newDivForFlex = document.createElement("div");
+            newDivForFlex.setAttribute("class", "newDivForFlex");
+
+            let newInput = document.createElement("input");
+            newInput.placeholder = "Add Item";
+
+            newInput.setAttribute("class", "inputForItems");
+
+            let buttonForItem = document.createElement("button");
+            buttonForItem.setAttribute("class", "buttonItem");
+            buttonForItem.textContent = "Add Items";
+
+            var func = "functionForItems(\""+cardData[i]['id']+"\")";
+            buttonForItem.setAttribute("onclick", func);
+
+            newDivForFlex.appendChild(newInput);
+
+            newDivForFlex.appendChild(buttonForItem);
+
+            newDiv.appendChild(newDivForFlex);
+
+
+
+
+
+            document.querySelector(".content-div").appendChild(newDiv);
+
 
             for (let j = 0; j < cardData[i]["checkItems"].length; j++) {
 
@@ -57,7 +88,7 @@ fetch('https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checklists?key=89
                     paraCB.checked = false;
                     x = false;
                 }
-                var fn = "checkboxFunction("+x+", \"" + cardData[i]["checkItems"][j]["id"] + "\")";
+                var fn = "checkboxFunction(" + x + ", \"" + cardData[i]["checkItems"][j]["id"] + "\")";
                 paraCB.setAttribute("onclick", fn);
 
 
@@ -93,16 +124,14 @@ function checkboxFunction(paraCB, id) {
             }
         });
 
-        var urlAPIPut = "https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checkItem/"+id+"?state=complete&key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7"
+        var urlAPIPut = "https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checkItem/" + id + "?state=incomplete&key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7"
 
         xhr.open("PUT", urlAPIPut);
 
         xhr.send(data);
-        
 
-    }
 
-    else {
+    } else {
         var data = null;
 
         var xhr = new XMLHttpRequest();
@@ -113,15 +142,15 @@ function checkboxFunction(paraCB, id) {
             }
         });
 
-        var urlAPIPut = "https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checkItem/"+id+"?state=incomplete&key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7"
+        var urlAPIPut = "https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checkItem/" + id + "?state=complete&key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7"
 
         xhr.open("PUT", urlAPIPut);
 
         xhr.send(data);
-    
+
     }
 
-   
+
 }
 
 function buttonFunction() {
@@ -144,4 +173,24 @@ function buttonFunction() {
     xhr.send(data);
 
     location.reload();
+}
+
+function functionForItems(id) {
+    let itemInput = document.querySelector(".inputForItems").value;
+    console.log(itemInput);
+    var data = null;
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === this.DONE) {
+            console.log(this.responseText);
+        }
+    });
+
+    var urlAPIForItems = "https://api.trello.com/1/checklists/"+id+"/checkItems?name="+itemInput+"&pos=bottom&checked=false&key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7";
+
+    xhr.open("POST", urlAPIForItems);
+
+    xhr.send(data);
 }
