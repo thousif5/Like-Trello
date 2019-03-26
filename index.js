@@ -1,14 +1,5 @@
 
-document.querySelector('.mainInput').placeholder = 'Checklist';
-document.querySelector('.content-div h2').textContent = 'Test Card';
-let buttonCL = document.querySelector('.content-div button');
-buttonCL.textContent = 'Add Checklist';
-
 //buttonCL.onclick = function() {buttonFunction()};
-
-
-
-
 
 // code for API
 
