@@ -1,0 +1,30 @@
+body {
+    background-color : #FFA02E;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.main-div {
+    height : 58em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content-div {
+    height: 100%;
+    width: 700px;
+    background: #E4AF70;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.content-div h2 {
+    padding: 40;
+    color: floralwhite;
+    text-align: center;
+}
+
+.content-div button {
+    background: black;
+    color: white;
+}

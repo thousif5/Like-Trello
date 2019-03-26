@@ -1,16 +1,4 @@
-// document.querySelector('body').setAttribute('style', 'background-color: #33AFFF;');
-// //document.querySelector('.content-div').setAttribute('style', 'height: 400px; width: 400px;');
 
-$(document).ready(function () {
-    $("body").css("background-color", "#FFA02E").css("font-family", "'Open Sans', sans-serif");
-    $(".main-div").css("height", "58em").css("display", "flex").css("justify-content", "center").css("align-items", "center");
-    $(".content-div").css("height", "100%").css("width", "700px").css("background", "#E4AF70").css("padding-left", "30px").css("padding-right", "30px");
-    $(".content-div h2").css("padding", "40").css("color", "floralwhite").css("text-align", "center");
-    $(".content-div button").css("background", "black").css("color", "white");
-
-
-
-})
 document.querySelector('.mainInput').placeholder = 'Checklist';
 document.querySelector('.content-div h2').textContent = 'Test Card';
 let buttonCL = document.querySelector('.content-div button');
@@ -228,7 +216,7 @@ function deleteChecklist(id) {
     xhr.open("DELETE", deleteUrl);
 
     xhr.send(data);
-    //location.reload();
+    setTimeout(location.reload.bind(location), 1000);
 
 }
 
@@ -250,5 +238,5 @@ function deleteItemsFunction(checklistId, checkItemId) {
     xhr.open("DELETE", deleteItemsUrl);
 
     xhr.send(data);
-    //location.reload();
+    setTimeout(location.reload.bind(location), 1000);
 }
