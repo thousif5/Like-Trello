@@ -1,15 +1,33 @@
+// code for getting data
 
-//buttonCL.onclick = function() {buttonFunction()};
+// ID, Key and Token should be in string
 
-// code for API
+let cardID = "5c976eebb77e4583fc7609f5";
+let developerKey = "89054c5990edbc128a3b8e87fb053290";
+let developerToken = "1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7";
 
-fetch('https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checklists?key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7')
+getData(cardID,developerKey,developerToken);
+
+function getData(cardId,devKey,devToken) {
+    fetch(`https://api.trello.com/1/cards/${cardId}/checklists?key=${devKey}&token=${devToken}`)
     .then(response => {
         return response.json();
-    }).then(cardData => {
+    }).then(checklistsData => {
+        let cardData = checklistsData;
+        return toOperate(cardData);
+        //console.log(checklistsData);
+    }).catch(err => {
+                 console.log(err);
+         })
+}
+
+// code for Operations
+
+function toOperate(cardData) {
+
         var forI = 0;
 
-        //console.log(data);
+        console.log(cardData);
         for (let i = 0; i < cardData.length; i++) {
             let newDiv = document.createElement("div");
             newDiv.setAttribute("class", "newDivFor");
@@ -110,10 +128,7 @@ fetch('https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checklists?key=89
 
 
 
-    })
-    .catch(err => {
-        console.log(err);
-    })
+  }
 
 
 
