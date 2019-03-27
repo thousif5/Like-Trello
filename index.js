@@ -2,247 +2,200 @@
 
 // ID, Key and Token should be in string
 
-let cardID = "5c976eebb77e4583fc7609f5";
-let developerKey = "89054c5990edbc128a3b8e87fb053290";
-let developerToken = "1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7";
+var cardID = "5c976eebb77e4583fc7609f5";
+var developerKey = "89054c5990edbc128a3b8e87fb053290";
+var developerToken = "1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7";
 
-getData(cardID,developerKey,developerToken);
 
-function getData(cardId,devKey,devToken) {
-    fetch(`https://api.trello.com/1/cards/${cardId}/checklists?key=${devKey}&token=${devToken}`)
-    .then(response => {
-        return response.json();
-    }).then(checklistsData => {
-        let cardData = checklistsData;
-        return toOperate(cardData);
-        //console.log(checklistsData);
-    }).catch(err => {
-                 console.log(err);
-         })
+
+getData();
+
+function getData() {
+    fetch(`https://api.trello.com/1/cards/${cardID}/checklists?key=${developerKey}&token=${developerToken}`)
+        .then(response => {
+            return response.json();
+        }).then(checklistsData => {
+            let cardData = checklistsData;
+            //console.log(checklistsData);
+            return toOperate(cardData);
+            
+        }).catch(err => {
+            console.log(err);
+        })
 }
 
 // code for Operations
 
 function toOperate(cardData) {
 
-        var forI = 0;
+  //console.log(cardID);
+    var forI = 0;
 
-        console.log(cardData);
-        for (let i = 0; i < cardData.length; i++) {
-            let newDiv = document.createElement("div");
-            newDiv.setAttribute("class", "newDivFor");
+    //console.log(cardData);
+    for (let i = 0; i < cardData.length; i++) {
+        let newDiv = document.createElement("div");
+        newDiv.setAttribute("class", "newDivFor");
 
-            let newPara = document.createElement("h3");
-            newPara.innerHTML = cardData[i]['name'];
+        let newPara = document.createElement("h3");
+        newPara.innerHTML = cardData[i]['name'];
 
-            newDiv.appendChild(newPara);
+        newDiv.appendChild(newPara);
 
-            let newDivForFlex = document.createElement("div");
-            newDivForFlex.setAttribute("class", "newDivForFlex");
+        let newDivForFlex = document.createElement("div");
+        newDivForFlex.setAttribute("class", "newDivForFlex");
 
-            let newInput = document.createElement("input");
-            newInput.placeholder = "Add Item";
+        let newInput = document.createElement("input");
+        newInput.placeholder = "Add Item";
 
-            newInput.setAttribute("class", "inputForItems");
+        newInput.setAttribute("class", "inputForItems");
 
-            let buttonForItem = document.createElement("button");
-            buttonForItem.setAttribute("class", "buttonItem");
-            buttonForItem.textContent = "Add Items";
-
-
-            let deleteButton = document.createElement("button");
-            deleteButton.setAttribute("Class", "delButton");
-            deleteButton.setAttribute("onclick", "deleteChecklist(\"" + cardData[i]['id'] + "\")");
-
-            deleteButton.textContent = "Delete Checklist";
+        let buttonForItem = document.createElement("button");
+        buttonForItem.setAttribute("class", "buttonItem");
+        buttonForItem.textContent = "Add Items";
 
 
+        let deleteButton = document.createElement("button");
+        deleteButton.setAttribute("Class", "delButton");
+        deleteButton.setAttribute("onclick", "deleteChecklist(\"" + cardData[i]['id'] + "\")");
 
-
-            var func = "functionForItems(" + forI + ", \"" + cardData[i]['id'] + "\")";
-            buttonForItem.setAttribute("onclick", func);
-
-            newDivForFlex.appendChild(newInput);
-
-            newDivForFlex.appendChild(buttonForItem);
-            newDivForFlex.appendChild(deleteButton);
-
-            newDiv.appendChild(newDivForFlex);
+        deleteButton.textContent = "Delete Checklist";
 
 
 
 
+        var func = "functionForItems(" + forI + ", \"" + cardData[i]['id'] + "\")";
+        buttonForItem.setAttribute("onclick", func);
 
-            document.querySelector(".content-div").appendChild(newDiv);
+        newDivForFlex.appendChild(newInput);
+
+        newDivForFlex.appendChild(buttonForItem);
+        newDivForFlex.appendChild(deleteButton);
+
+        newDiv.appendChild(newDivForFlex);
+
+
+
+
+
+        document.querySelector(".content-div").appendChild(newDiv);
 
         // for checkitems
-            for (let j = 0; j < cardData[i]["checkItems"].length; j++) {
+        for (let j = 0; j < cardData[i]["checkItems"].length; j++) {
 
-                let creDiv = document.createElement('div');
-                creDiv.className = "divByApi";
-                creDiv.style.cssText = "display: flex; align-Items:center";
-                document.querySelector(".content-div").appendChild(creDiv);
-                //console.log(cardData[i]["checkItems"][j]);
-                let childDivForCB = document.createElement('div');
-                creDiv.appendChild(childDivForCB);
-                let paraCB = document.createElement("INPUT");
-                paraCB.setAttribute("type", "checkbox");
-                paraCB.style.cssText = "height:16px; width:16px";
-                var x;
-                if (cardData[i]["checkItems"][j]["state"] === "complete") {
-                    paraCB.checked = true;
-                    x = true;
-                } else {
-                    paraCB.checked = false;
-                    x = false;
-                }
-                var fn = "checkboxFunction(" + x + ", \"" + cardData[i]["checkItems"][j]["id"] + "\")";
-                paraCB.setAttribute("onclick", fn);
-
-                let deleteDiv = document.createElement("div");
-                deleteDiv.setAttribute("class", "divDelete");
-
-
-                deleteDiv.setAttribute("onclick", "deleteItemsFunction(\"" + cardData[i]['id'] + "\",\"" + cardData[i]['checkItems'][j]['id'] + "\")");
-                deleteDiv.style.cssText = "padding-left:10px";
-
-                let deleteForItems = document.createElement("button");
-                deleteForItems.setAttribute("class", "delButtonForItems");
-                deleteForItems.textContent = "Delete Item";
-
-                deleteDiv.appendChild(deleteForItems);
-
-
-
-
-                childDivForCB.appendChild(paraCB);
-                let childDivForPara = document.createElement('div');
-                creDiv.appendChild(childDivForPara);
-                creDiv.appendChild(deleteDiv);
-                let elePara = document.createElement('p');
-                elePara.textContent = cardData[i]["checkItems"][j]["name"];
-                childDivForPara.appendChild(elePara);
+            let creDiv = document.createElement('div');
+            creDiv.className = "divByApi";
+            creDiv.style.cssText = "display: flex; align-Items:center";
+            document.querySelector(".content-div").appendChild(creDiv);
+            //console.log(cardData[i]["checkItems"][j]);
+            let childDivForCB = document.createElement('div');
+            creDiv.appendChild(childDivForCB);
+            let paraCB = document.createElement("INPUT");
+            paraCB.setAttribute("type", "checkbox");
+            paraCB.style.cssText = "height:16px; width:16px";
+            var x;
+            if (cardData[i]["checkItems"][j]["state"] === "complete") {
+                paraCB.checked = true;
+                x = true;
+            } else {
+                paraCB.checked = false;
+                x = false;
             }
-            forI++;
+            var fn = "checkboxFunction(" + x + ", \"" + cardData[i]["checkItems"][j]["id"] + "\")";
+            paraCB.setAttribute("onclick", fn);
+
+            let deleteDiv = document.createElement("div");
+            deleteDiv.setAttribute("class", "divDelete");
+
+
+            deleteDiv.setAttribute("onclick", "deleteItemsFunction(\"" + cardData[i]['id'] + "\",\"" + cardData[i]['checkItems'][j]['id'] + "\")");
+            deleteDiv.style.cssText = "padding-left:10px";
+
+            let deleteForItems = document.createElement("button");
+            deleteForItems.setAttribute("class", "delButtonForItems");
+            deleteForItems.textContent = "Delete Item";
+
+            deleteDiv.appendChild(deleteForItems);
+
+
+
+
+            childDivForCB.appendChild(paraCB);
+            let childDivForPara = document.createElement('div');
+            creDiv.appendChild(childDivForPara);
+            creDiv.appendChild(deleteDiv);
+            let elePara = document.createElement('p');
+            elePara.textContent = cardData[i]["checkItems"][j]["name"];
+            childDivForPara.appendChild(elePara);
         }
-
-
-
-  }
-
-
-
-function checkboxFunction(paraCB, id) {
-   // console.log(id)
-
-
-    var data = null;
-
-    var xhr = new XMLHttpRequest();
-
-    xhr.addEventListener("readystatechange", function () {
-        if (this.readyState === this.DONE) {
-            console.log(this.responseText);
-        }
-    });
-
-    if (paraCB == true) {
-
-        var urlAPIPut = "https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checkItem/" + id + "?state=incomplete&key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7";
-    } else {
-        var urlAPIPut = "https://api.trello.com/1/cards/5c976eebb77e4583fc7609f5/checkItem/" + id + "?state=complete&key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7";
-
+        forI++;
     }
 
-    xhr.open("PUT", urlAPIPut);
 
-    xhr.send(data);
-    // location.reload();
+
+}
+
+// for updating checkbox
+
+function checkboxFunction(paraCB, id) {
+
+    let state;
+    if (paraCB == true) state = "incomplete";
+    else state = "complete";
+
+    fetch(`https://api.trello.com/1/cards/${cardID}/checkItem/${id}?state=${state}&key=${developerKey}&token=${developerToken}`, {
+        method: "PUT",
+    }).catch(err => {
+        console.log(err);
+    })
+    
+
 }
 
 
-
+// for adding checklists
 function buttonFunction() {
     let inputVar = document.querySelector('.mainInput').value;
 
-    var data = null;
-
-    var xhr = new XMLHttpRequest();
-
-    xhr.addEventListener("readystatechange", function () {
-        if (this.readyState === this.DONE) {
-            console.log(this.responseText);
-        }
-    });
-
-    var urlAPI = "https://api.trello.com/1/checklists?idCard=5c976eebb77e4583fc7609f5&name=" + inputVar + "&key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7"
-
-    xhr.open("POST", urlAPI);
-
-    xhr.send(data);
-
-    location.reload();
+    fetch(`https://api.trello.com/1/cards/${cardID}/checklists?name=${inputVar}&key=${developerKey}&token=${developerToken}`, {
+        method: "POST",
+    }).catch(err => {
+        console.log(err);
+    })
 }
+
+
+//for adding items in checklist
 
 function functionForItems(i, id) {
-   // console.log(id);
+    
     let itemInput = document.querySelectorAll(".inputForItems")[i].value;
-    //console.log(itemInput);
-    var data = null;
 
-    var xhr = new XMLHttpRequest();
-
-    xhr.addEventListener("readystatechange", function () {
-        if (this.readyState === this.DONE) {
-            console.log(this.responseText);
-        }
-    });
-
-    var urlAPIForItems = "https://api.trello.com/1/checklists/" + id + "/checkItems?name=" + itemInput + "&pos=bottom&checked=false&key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7";
-
-    xhr.open("POST", urlAPIForItems);
-
-    xhr.send(data);
-    location.reload();
+    fetch(`https://api.trello.com/1/checklists/${id}/checkItems?name=${itemInput}&pos=bottom&checked=false&key=${developerKey}&token=${developerToken}`, {
+        method: "POST",
+    }).catch(err => {
+        console.log(err);
+    })
 }
+
+// for deleting checklists
 
 function deleteChecklist(id) {
-    var data = null;
 
-    var xhr = new XMLHttpRequest();
-
-    xhr.addEventListener("readystatechange", function () {
-        if (this.readyState === this.DONE) {
-            console.log(this.responseText);
-        }
-    });
-
-    let deleteUrl = "https://api.trello.com/1/checklists/" + id + "?key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7";
-
-    xhr.open("DELETE", deleteUrl);
-
-    xhr.send(data);
-    setTimeout(location.reload.bind(location), 1000);
+    fetch(`https://api.trello.com/1/checklists/${id}?key=${developerKey}&token=${developerToken}`, {
+        method: "DELETE",
+    }).catch(err => {
+        console.log(err);
+    })
 
 }
+
+// for deleting items in checklist
 
 function deleteItemsFunction(checklistId, checkItemId) {
 
-   // console.log(checkItemId, checklistId);
-    var data = null;
-
-    var xhr = new XMLHttpRequest();
-
-    xhr.addEventListener("readystatechange", function () {
-        if (this.readyState === this.DONE) {
-            console.log(this.responseText);
-        }
-    });
-
-    let deleteItemsUrl = "https://api.trello.com/1/checklists/" + checklistId + "/checkItems/" + checkItemId + "?key=89054c5990edbc128a3b8e87fb053290&token=1c788cb9754bd3aef0f81f69c1418c4522a114cf5aada05f02eb2d5e04b3a1e7";
-
-    xhr.open("DELETE", deleteItemsUrl);
-
-    xhr.send(data);
-    setTimeout(location.reload.bind(location), 1000);
+    fetch(`https://api.trello.com/1/checklists/${checklistId}/checkItems/${checkItemId}?key=${developerKey}&token=${developerToken}`, {
+        method: "DELETE",
+    }).catch(err => {
+        console.log(err);
+    })
 }
