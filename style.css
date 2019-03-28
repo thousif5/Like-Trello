@@ -28,3 +28,12 @@ body {
     background: black;
     color: white;
 }
+
+.divByApi {
+    display: flex; 
+    align-Items:center;
+}
+
+.divDelete {
+    padding-left:10px;
+}
