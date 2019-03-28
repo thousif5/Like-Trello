@@ -37,3 +37,8 @@ body {
 .divDelete {
     padding-left:10px;
 }
+
+.checkboxForP {
+    height:16px; 
+    width:16px;
+}
